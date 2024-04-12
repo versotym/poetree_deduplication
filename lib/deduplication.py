@@ -67,7 +67,6 @@ class Deduplication:
                 self.metadata[poem['id']] = {
                     'length':         len(poem['body']),
                     'title' :         poem['title'],
-                    'year_created':   poem['year_created'],
                     'year_published': poem['source']['year_published'],
                     'duplicate':      False,
                     'subcorpus':      poem['source']['corpus']
@@ -76,6 +75,10 @@ class Deduplication:
                     self.metadata[poem['id']]['author'] = ' + '.join([x['name'] for x in poem['author']])
                 else:
                     self.metadata[poem['id']]['author'] = poem['author']['name']
+                if isinstance(poem['year_created'], list):
+                    self.metadata[poem['id']]['year_created'] = poem['year_created'][0]
+                else:
+                    self.metadata[poem['id']]['year_created'] = poem['year_created']
                 for neighbor in poem['neighbors']:
                     if neighbor[1] >= self.threshold:
                         self.nodes.add(poem['id'])
